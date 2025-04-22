@@ -1,20 +1,19 @@
 <script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
 <script>
   /* global nn */
-  
   let GIF, COLOR
   const versions = [
     {
-      gif: 'bird.gif',
-      color: 'plum'
+      gif: 'manta.gif',
+      color: 'linear-gradient(90deg,rgba(93, 193, 232, 1) 0%, rgba(87, 150, 199, 1) 50%, rgba(33, 115, 237, 1) 100%)'
     },
     {
-      gif: 'bird.gif',
-      color: 'Coral'
+      gif: 'dolphin.gif',
+      color: 'linear-gradient(180deg, rgba(37, 175, 230, 1) 0%, rgba(29, 93, 143, 1) 50%, rgba(17, 63, 133, 1) 100%)'
     },
     {
-      gif: 'bird.gif',
-      color: 'LemonChiffon'
+      gif: 'fishies.gif',
+      color: 'linear-gradient(180deg,rgba(43, 240, 230, 1) 0%, rgba(81, 185, 214, 1) 50%, rgba(17, 85, 133, 1) 100%)'
     }
   ]
   
@@ -42,6 +41,18 @@
     }
   }
   
+  async function createFish(num, A, B, a, b, delta, url) {
+  const gif = await nn.loadImage(url)
+  for (let i = 0; i < num; i++) {
+    const t = (i / num) * 2 * Math.PI
+    const cx = nn.width / 2
+    const cy = nn.height / 2
+    const x = cx + A * Math.sin(a * t + delta)
+    const y = cy + B * Math.sin(b * t)
+    createGif(x, y, gif.width, gif.height, url)
+  }
+}
+  
   async function setup () {    
     const params = new URLSearchParams(location.search)
     const v = params.get('version')
@@ -51,19 +62,20 @@
     } else if (v === '2') {
       GIF = versions[1].gif
       COLOR = versions[1].color
+      createGifCircle(22, 0.3, 100, GIF)
+      createGifCircle(22, 0.3, 200, GIF)
+      createGifCircle(22, 0.3, 250, GIF)
     } else {
       GIF = versions[0].gif
       COLOR = versions[0].color
+      createFish(100, 250, 100, 2, 3, Math.PI / 2, GIF)
     }
       
     nn.get('body').css({
-      backgroundColor: COLOR,
+      background: COLOR,
       overflow: 'hidden'
     })
 
-    createGifCircle(22, 0.3, 100, GIF)
-    createGifCircle(22, 0.3, 150, GIF)
-    createGifCircle(22, 0.3, 200, GIF)
   }
   
   nn.on('load', setup)
