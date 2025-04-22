@@ -76,6 +76,7 @@
   }
 
   //fish symbol
+  //used lissajous curve formula from here: https://mathworld.wolfram.com/LissajousCurve.html
   async function createFish(num, A, B, a, b, delta, url) {
     const gif = await nn.loadImage(url)
     for (let i = 0; i < num; i++) {
