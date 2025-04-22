@@ -1,7 +1,7 @@
 <script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
 <script>
   /* global nn */
-  let GIF, COLOR
+  let GIF, COLOR, bubbs
   const versions = [{
       gif: 'manta.gif',
       color: 'linear-gradient(180deg,rgba(93, 193, 232, 1) 0%, rgba(87, 150, 199, 1) 50%, rgba(33, 115, 237, 1) 100%)'
@@ -32,15 +32,34 @@
       .addTo('body')
       gif.on('mouseover', (e) => {
       gif.css({ width: '0px', height: '0px' })
-    const posX = e.clientX;
-    const posY = e.clientY;
-        createGif(posX,posY,bubbs.width,bubbs.height, 'bubbs1.gif')
+      const posX = e.clientX;
+      const posY = e.clientY;
+      makeBubbles(posX,posY)
     })
     
     gif.on('mouseout', () => {
       setTimeout(() => {
         gif.css({ width: `${w}px`, height: `${h}px` })
       }, 1000)
+    })
+  }
+  
+  function makeBubbles(x, y) {
+    const gif = nn.create('img')
+          .set({
+        src: `bubbs1.gif`
+      })
+          .css({
+        position: 'absolute',
+        width: bubbs.width,
+        height: bubbs.height,
+        left: x,
+        top: y,
+        transition: 'all 1s'
+      })
+      .addTo('body')
+      gif.on('mouseover', () => {
+      gif.css({ width: '0px', height: '0px' })
     })
   }
   
@@ -87,7 +106,7 @@
   }
 
   async function setup() {
-    const bubbs = nn.loadImage('bubbs1.gif');
+    bubbs = await nn.loadImage('bubbs1.gif')
     const params = new URLSearchParams(location.search)
     const v = params.get('version')
     if (v === '3') {
