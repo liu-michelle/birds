@@ -2,7 +2,6 @@
 <script>
   /* global nn */
   let GIF, COLOR
-  let bubbs = 'bubbs1.gif'
   const versions = [{
       gif: 'manta.gif',
       color: 'linear-gradient(180deg,rgba(93, 193, 232, 1) 0%, rgba(87, 150, 199, 1) 50%, rgba(33, 115, 237, 1) 100%)'
@@ -31,9 +30,11 @@
         transition: 'all 1s'
       })
       .addTo('body')
-      gif.on('mouseover', () => {
+      gif.on('mouseover', (e) => {
       gif.css({ width: '0px', height: '0px' })
-        createGif(x,y,bubbs.width,bubbs.height, bubbs)
+    const posX = e.clientX;
+    const posY = e.clientY;
+        createGif(posX,posY,bubbs.width,bubbs.height, 'bubbs1.gif')
     })
     
     gif.on('mouseout', () => {
@@ -86,6 +87,7 @@
   }
 
   async function setup() {
+    const bubbs = nn.loadImage('bubbs1.gif');
     const params = new URLSearchParams(location.search)
     const v = params.get('version')
     if (v === '3') {
