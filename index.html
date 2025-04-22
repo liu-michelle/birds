@@ -2,10 +2,9 @@
 <script>
   /* global nn */
   let GIF, COLOR
-  const versions = [
-    {
+  const versions = [{
       gif: 'manta.gif',
-      color: 'linear-gradient(90deg,rgba(93, 193, 232, 1) 0%, rgba(87, 150, 199, 1) 50%, rgba(33, 115, 237, 1) 100%)'
+      color: 'linear-gradient(180deg,rgba(93, 193, 232, 1) 0%, rgba(87, 150, 199, 1) 50%, rgba(33, 115, 237, 1) 100%)'
     },
     {
       gif: 'dolphin.gif',
@@ -16,10 +15,12 @@
       color: 'linear-gradient(180deg,rgba(43, 240, 230, 1) 0%, rgba(81, 185, 214, 1) 50%, rgba(17, 85, 133, 1) 100%)'
     }
   ]
-  
-  function createGif (x, y, w, h, url) {
+
+  function createGif(x, y, w, h, url) {
     nn.create('img')
-      .set({ src: `${url}#${Math.random()}` })
+      .set({
+        src: `${url}#${Math.random()}`
+      })
       .css({
         position: 'absolute',
         width: w,
@@ -29,8 +30,8 @@
       })
       .addTo('body')
   }
-  
-  async function createGifCircle (num, scale, radius, url) {
+
+  async function createGifCircle(num, scale, radius, url) {
     const gif = await nn.loadImage(url)
     for (let i = 0; i < num; i++) {
       const cx = nn.width / 2
@@ -40,44 +41,64 @@
       createGif(x, y, gif.width, gif.height, url)
     }
   }
-  
+
   async function createFish(num, A, B, a, b, delta, url) {
-  const gif = await nn.loadImage(url)
-  for (let i = 0; i < num; i++) {
-    const t = (i / num) * 2 * Math.PI
-    const cx = nn.width / 2
-    const cy = nn.height / 2
-    const x = cx + A * Math.sin(a * t + delta)
-    const y = cy + B * Math.sin(b * t)
-    createGif(x, y, gif.width, gif.height, url)
+    const gif = await nn.loadImage(url)
+    for (let i = 0; i < num; i++) {
+      const t = (i / num) * 2 * Math.PI
+      const cx = nn.width / 2
+      const cy = nn.height / 2
+      const x = cx + A * Math.sin(a * t + delta)
+      const y = cy + B * Math.sin(b * t)
+      createGif(x, y, gif.width, gif.height, url)
+    }
   }
-}
   
-  async function setup () {    
+  async function createGrid(url) {
+    const gif = await nn.loadImage(url)
+        const cellWidth = gif.width / 6
+    const cellHeight = gif.height 
+    const numColumns = nn.width / cellWidth
+    const numRows = (nn.height / cellHeight) * 0.75
+    
+    for (let r = 0; r < numRows; r++) {
+      for (let c = 0; c < numColumns; c++) {
+        const x = c * cellWidth
+        const y = r * cellHeight
+        createGif(x, y, gif.width, gif.height, GIF)
+      }
+    }
+  }
+
+  async function setup() {
     const params = new URLSearchParams(location.search)
     const v = params.get('version')
     if (v === '3') {
       GIF = versions[2].gif
       COLOR = versions[2].color
+      createGrid(GIF)
+      
     } else if (v === '2') {
       GIF = versions[1].gif
       COLOR = versions[1].color
       createGifCircle(22, 0.3, 100, GIF)
+      createGifCircle(22, 0.3, 150, GIF)
       createGifCircle(22, 0.3, 200, GIF)
       createGifCircle(22, 0.3, 250, GIF)
+      createGifCircle(22, 0.3, 300, GIF)
     } else {
       GIF = versions[0].gif
       COLOR = versions[0].color
       createFish(100, 250, 100, 2, 3, Math.PI / 2, GIF)
+
     }
-      
+
     nn.get('body').css({
       background: COLOR,
       overflow: 'hidden'
     })
 
   }
-  
+
   nn.on('load', setup)
-  
 </script>
